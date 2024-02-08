@@ -12,16 +12,55 @@ Table user {
   last_name String
   role Role [not null, default: 'player']
   token_expiry_date DateTime
-  verify_email_token String
-  reset_password_token String
   wallet_address String
   auth_email_google String [unique]
-  auth_metamask_wallet String [unique]
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime
+  user_token user_token
+  room room
+  roomId String
+  balance Float [not null]
+}
+
+Table user_token {
+  id Int [pk, increment]
+  refresh_token String
+  refresh_token_times Int
+  access_token String [not null]
+  user_id String [unique, not null]
+  user user [not null]
+}
+
+Table room {
+  id String [pk]
+  player user [not null]
+  result_history result_history [not null]
+  stickyRiceCakeJar Float [not null]
+}
+
+Table result_history {
+  id Int [pk, increment]
+  result Json
+  room room
+  roomId String
+}
+
+Enum Result {
+  moose
+  gourd
+  chicken
+  fish
+  crab
+  shrimp
 }
 
 Enum Role {
   player
   admin
 }
+
+Ref: user.roomId > room.id
+
+Ref: user_token.user_id - user.id
+
+Ref: result_history.roomId > room.id
