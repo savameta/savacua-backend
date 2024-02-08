@@ -54,6 +54,4 @@ export class UserController {
       message: 'Your account has been successfully linked!',
     };
   }
-
-  //TODO: Request to writer
 }
