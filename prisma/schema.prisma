@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+model user {
+  id                String      @id @unique @default(uuid())
+  username          String      @unique
+  password          String?
+  avatar            String?
+  email             String      @unique
+  first_name        String?
+  last_name         String?
+  role              Role        @default(player)
+  token_expiry_date DateTime?   @db.Timestamp(6)
+  wallet_address    String?     @db.VarChar //link account email - wallet address
+  auth_email_google String?     @unique @db.VarChar // login with google will save for here
+  created_at        DateTime    @default(now())
+  updated_at        DateTime?   @updatedAt @db.Timestamp(6)
+  user_token        user_token?
+  room              room?       @relation(fields: [roomId], references: [id])
+  roomId            String?
+  balance           Float
+}
+
+model user_token {
+  id Int @id @default(autoincrement())
+
+  refresh_token       String?
+  refresh_token_times Int?
+  access_token        String
+
+  user_id String @unique
+  user    user   @relation(fields: [user_id], references: [id])
+}
+
+model room {
+  id                String           @id
+  player            user[]
+  result_history    result_history[]
+  stickyRiceCakeJar Float
+}
+
+model result_history {
+  id     Int     @id @default(autoincrement())
+  result Json? // 
+  room   room?   @relation(fields: [roomId], references: [id])
+  roomId String?
+}
+
+enum Result {
+  moose
+  gourd
+  chicken
+  fish
+  crab
+  shrimp
+}
+
+enum Role {
+  player
+  admin
+}

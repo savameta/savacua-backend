@@ -1,0 +1,27 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table user {
+  id String [pk]
+  username String [unique, not null]
+  password String
+  avatar String
+  email String [unique, not null]
+  first_name String
+  last_name String
+  role Role [not null, default: 'player']
+  token_expiry_date DateTime
+  verify_email_token String
+  reset_password_token String
+  wallet_address String
+  auth_email_google String [unique]
+  auth_metamask_wallet String [unique]
+  created_at DateTime [default: `now()`, not null]
+  updated_at DateTime
+}
+
+Enum Role {
+  player
+  admin
+}
